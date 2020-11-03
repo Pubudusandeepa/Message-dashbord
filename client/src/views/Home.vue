@@ -1,7 +1,8 @@
 <template>
   <div class="home">
-     <h1>Hi</h1>
-  <form @submit.prevent="addMessage">
+     <button @click="showMessageForm= !showMessageForm"
+      type="button" class="btn btn-primary">Show mwssageForm</button>
+  <form v-if="showMessageForm" @submit.prevent="addMessage">
       <div class="form-group">
         <label for="username">User name</label>
        <input type="text"
@@ -49,7 +50,7 @@
        <button type="submit"> Submit</button>
  </form>
 
-   <div class="list-unstyled" v-for="message in messages" :key="message._id">
+   <div class="list-unstyled" v-for="message in reversedMessages" :key="message._id">
        <hr />
     <li class="media" >
       <img :src="message.imageURL" class="mr-3" :alt="message.subject">
@@ -76,6 +77,7 @@ const POST_URL = 'http://localhost:4000/message';
 export default {
   name: 'Home',
   data: () => ({
+    showMessageForm: true,
     messages: [],
     message: {
       username: 'Anonymous',
@@ -85,6 +87,12 @@ export default {
 
     },
   }),
+
+  computed: {
+    reversedMessages() {
+      return this.messages.slice().reverse();
+    },
+  },
 
   mounted() {
     fetch(API_URL).then((response) => response.json()).then((result) => {
